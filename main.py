@@ -22,14 +22,22 @@ def values(message: telebot.types.Message):
 
 @bot.message_handler(content_types=['text'])
 def convert(message: telebot.types.Message):
-    value = message.text.split()
-    if len(value) > 3:
-        raise ConvertException('Больше 3 переменных')
-    quote, base, ammount = value
-    total_base = CryptoConverter.get_price(quote, base, ammount)
-    res_total = float (total_base) * float (ammount)
-    total_sum = f'Стоимость {ammount} {quote} в {base} равна {res_total}'    
-    bot.send_message(message.chat.id, total_sum)
+    try:
+        value = message.text.split()
+        if len(value) > 3:
+            raise ConvertException('Больше 3 переменных')
+        quote, base, ammount = value
+        total_base = CryptoConverter.get_price(quote, base, ammount)
+        res_total = float (total_base) * float (ammount)
+        total_sum = f'Стоимость {ammount} {quote} в {base} равна {res_total}'
+    except ConvertException as e:
+        bot.reply_to(message,f'Ошибка пользователя: \n {e}')    
+
+    except Exception as e:
+        bot.reply_to(message,f'Ошибка на стороне сервера \n {e}')
+        
+    else:
+        bot.send_message(message.chat.id, total_sum)
 
 
 bot.polling()
