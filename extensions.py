@@ -30,5 +30,5 @@ class CryptoConverter ():
         total_base = requests.get(
             f'https://min-api.cryptocompare.com/data/price?fsym={keys[quote]}&tsyms={keys[base]}')
         result = json.loads(total_base.content)[keys[base]]
-        # result = float(text) * ammount
+        
         return result
